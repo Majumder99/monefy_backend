@@ -9,6 +9,7 @@ export class UserController {
       const user = await this.userService.createUser(req.body);
       res.status(201).json(user);
     } catch (error) {
+      console.log("Error in register", error);
       next(error);
     }
   };
@@ -17,8 +18,9 @@ export class UserController {
     try {
       const { email, password } = req.body;
       const result = await this.userService.loginUser(email, password);
-      res.json(result);
+      res.status(200).json(result);
     } catch (error) {
+      console.log("Error in login", error);
       next(error);
     }
   };
@@ -26,8 +28,9 @@ export class UserController {
   getProfile = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const user = await this.userService.getUserById(req.user!.userId);
-      res.json(user);
+      res.status(200).json(user);
     } catch (error) {
+      console.log("Error in getProfile", error);
       next(error);
     }
   };
@@ -40,6 +43,7 @@ export class UserController {
       );
       res.json(user);
     } catch (error) {
+      console.log("Error in updateUser", error);
       next(error);
     }
   };
@@ -49,6 +53,7 @@ export class UserController {
       const users = await this.userService.getAllUsers();
       res.json(users);
     } catch (error) {
+      console.log("Error in getAllUsers", error);
       next(error);
     }
   };
@@ -58,6 +63,7 @@ export class UserController {
       await this.userService.deleteUser(parseInt(req.params.id));
       res.json({ message: "User deleted successfully" });
     } catch (error) {
+      console.log("Error in deleteUser", error);
       next(error);
     }
   };

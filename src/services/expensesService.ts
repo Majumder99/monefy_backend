@@ -1,10 +1,13 @@
-import { AppError } from "../middleware/errorHandler";
-import { Category, Expense } from "../models";
+import { AppError } from "../middlewares/errorHandler.js";
+import { Category, Expense, User } from "../models/index.js";
 
 export class ExpenseService {
   async getAllExpenses() {
     return await Expense.findAll({
-      include: [{ model: Category, as: "category" }],
+      include: [
+        { model: Category, as: "category" },
+        { model: User, as: "user" },
+      ],
     });
   }
 

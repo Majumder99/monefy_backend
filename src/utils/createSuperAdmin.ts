@@ -1,6 +1,5 @@
-// src/utils/createSuperAdmin.ts
 import bcrypt from "bcrypt";
-import { User } from "../models";
+import { User } from "../models/index.js";
 
 export async function createSuperAdmin() {
   try {
@@ -11,6 +10,7 @@ export async function createSuperAdmin() {
     if (!existingAdmin) {
       const hashedPassword = await bcrypt.hash("adminpassword123", 10);
       await User.create({
+        id: 1,
         name: "Super Admin",
         email: "admin@example.com",
         hashed_password: hashedPassword,

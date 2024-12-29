@@ -1,15 +1,19 @@
 import { NextFunction, Request, Response } from "express";
-import { ExpenseService } from "../services/expenseService";
+import { ExpenseService } from "../services/expensesService.js";
 
 export class ExpenseController {
   private expenseService = new ExpenseService();
 
-  getAllExpenses = async (req: Request, res: Response, next: NextFunction) => {
+  getAllExpenses = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
     try {
       // Only admin can get all expenses
       if (req.user?.role === "admin") {
         const expenses = await this.expenseService.getAllExpenses();
-        return res.json(expenses);
+        res.json({ expenses, message: "All expenses fetched successfully" });
       }
       res.status(403).json({ message: "Not authorized" });
     } catch (error) {

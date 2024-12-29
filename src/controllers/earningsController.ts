@@ -1,15 +1,19 @@
 import { NextFunction, Request, Response } from "express";
-import { EarningService } from "../services/earningService";
+import { EarningService } from "../services/earningsService.js";
 
 export class EarningController {
   private earningService = new EarningService();
 
-  getAllEarnings = async (req: Request, res: Response, next: NextFunction) => {
+  getAllEarnings = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
     try {
       // Only admin can get all earnings
       if (req.user?.role === "admin") {
         const earnings = await this.earningService.getAllEarnings();
-        return res.json(earnings);
+        res.json({ earnings, message: "All earnings" });
       }
       res.status(403).json({ message: "Not authorized" });
     } catch (error) {

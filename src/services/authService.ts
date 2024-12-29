@@ -1,7 +1,7 @@
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { AppError } from "../middlewares/errorHandler.js";
-import { User } from "../models/index.js";
+import { Earning, Expense, User } from "../models/index.js";
 
 export class UserService {
   async createUser(userData: any) {
@@ -42,7 +42,6 @@ export class UserService {
       process.env.JWT_SECRET!,
       { expiresIn: "24h" }
     );
-
     const { hashed_password, ...userWithoutPassword } = user.get();
     return { user: userWithoutPassword, token };
   }
@@ -50,6 +49,18 @@ export class UserService {
   async getAllUsers() {
     const users = await User.findAll({
       attributes: { exclude: ["hashed_password"] },
+      include: [
+        {
+          model: Expense,
+          as: "expenses",
+          attributes: { exclude: ["user_id", "category_id"] },
+        },
+        {
+          model: Earning,
+          as: "earnings",
+          attributes: { exclude: ["user_id", "category_id"] },
+        },
+      ],
     });
     return users;
   }
@@ -57,6 +68,18 @@ export class UserService {
   async getUserById(id: number) {
     const user = await User.findByPk(id, {
       attributes: { exclude: ["hashed_password"] },
+      include: [
+        {
+          model: Expense,
+          as: "expenses",
+          attributes: { exclude: ["user_id", "category_id"] },
+        },
+        {
+          model: Earning,
+          as: "earnings",
+          attributes: { exclude: ["user_id", "category_id"] },
+        },
+      ],
     });
     if (!user) {
       throw new AppError("User not found", 404);
