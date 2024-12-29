@@ -1,0 +1,226 @@
+{
+	"info": {
+		"_postman_id": "dce81acb-d27f-4e22-8a4a-8504fbd9c9a5",
+		"name": "Earning",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "29781502"
+	},
+	"item": [
+		{
+			"name": "User earning",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywiaWF0IjoxNzIyNjA1NDU0LCJleHAiOjE3MjI2OTE4NTR9.JZ3o4g76LFqgUvMe6eCAS0gMvch4N_jiJYfevxogax0",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{Public_URL}}/api/earnings",
+					"host": [
+						"{{Public_URL}}"
+					],
+					"path": [
+						"api",
+						"earnings"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "All earnings",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywiaWF0IjoxNzIyNjA1NDU0LCJleHAiOjE3MjI2OTE4NTR9.JZ3o4g76LFqgUvMe6eCAS0gMvch4N_jiJYfevxogax0",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{Public_URL}}/api/earnings/all",
+					"host": [
+						"{{Public_URL}}"
+					],
+					"path": [
+						"api",
+						"earnings",
+						"all"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update user earning",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywiaWF0IjoxNzIyNjA1NDU0LCJleHAiOjE3MjI2OTE4NTR9.JZ3o4g76LFqgUvMe6eCAS0gMvch4N_jiJYfevxogax0",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"description\": \"\",\r\n    \"amount\": 45.5,\r\n    \"category_id\": 2\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{Public_URL}}/api/earnings/1",
+					"host": [
+						"{{Public_URL}}"
+					],
+					"path": [
+						"api",
+						"earnings",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete user earning",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywiaWF0IjoxNzIyNjA1NDU0LCJleHAiOjE3MjI2OTE4NTR9.JZ3o4g76LFqgUvMe6eCAS0gMvch4N_jiJYfevxogax0",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{Public_URL}}/api/earnings/1",
+					"host": [
+						"{{Public_URL}}"
+					],
+					"path": [
+						"api",
+						"earnings",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create user earning",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjMsInJvbGUiOiJ1c2VyIiwiaWF0IjoxNzM1NTAyMTcxLCJleHAiOjE3MzU1ODg1NzF9.HE0gwlQ7BcvfsdkLgZa3nbd_-FwT-_vIl7hy-ve28_4",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"description\": \"got money from zatiq\",\r\n    \"amount\": 4500,\r\n    \"category_id\": 4\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{Public_URL}}/api/earnings",
+					"host": [
+						"{{Public_URL}}"
+					],
+					"path": [
+						"api",
+						"earnings"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
