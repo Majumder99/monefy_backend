@@ -1,13 +1,20 @@
 import { DataTypes, Model } from "sequelize";
 import sequelize from "../config/db.js";
-import Earning from "./earningsModel.js";
-import Expense from "./expensesModel.js";
 
-class User extends Model {
-  id!: number;
-  name!: string;
-  email!: string;
-  hashed_password!: string;
+interface UserAttributes {
+  id: number;
+  name: string;
+  email: string;
+  hashed_password: string;
+  role: string;
+}
+
+class User extends Model<UserAttributes> implements UserAttributes {
+  public id!: number;
+  public name!: string;
+  public email!: string;
+  public hashed_password!: string;
+  public role!: string;
 }
 
 User.init(
@@ -25,19 +32,25 @@ User.init(
       type: DataTypes.STRING,
       unique: true,
       allowNull: false,
+      validate: {
+        isEmail: true,
+      },
     },
     hashed_password: {
       type: DataTypes.STRING,
       allowNull: false,
     },
+    role: {
+      type: DataTypes.ENUM("user", "admin"),
+      defaultValue: "user",
+    },
   },
   {
     sequelize,
     modelName: "User",
+    tableName: "users",
+    timestamps: true,
   }
 );
-
-User.hasMany(Expense, { foreignKey: "user_id", as: "expenses" });
-User.hasMany(Earning, { foreignKey: "user_id", as: "earnings" });
 
 export default User;

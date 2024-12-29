@@ -1,28 +1,23 @@
 // src/app.ts
 import cors from "cors";
 import express from "express";
+import morgan from "morgan";
+import authRoutes from "./routes/authRoutes.js";
+import categoryRoutes from "./routes/categoryRoutes.js";
+import earningRoutes from "./routes/earningsRoutes.js";
+import expenseRoutes from "./routes/expensesRoutes.js";
 
 const app = express();
 
 // Middleware
 app.use(cors());
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(morgan("dev"));
 
-// Routes (uncomment when ready)
-// import userRoutes from "./routes/userRoutes";
-// import categoryRoutes from "./routes/categoryRoutes";
-// import expenseRoutes from "./routes/expenseRoutes";
-// import earningRoutes from "./routes/earningRoutes";
-
-// app.use("/users", userRoutes);
-// app.use("/categories", categoryRoutes);
-// app.use("/expenses", expenseRoutes);
-// app.use("/earnings", earningRoutes);
-
-// Basic test route
-app.get("/", (req, res) => {
-  res.json({ message: "Welcome to Monefy API" });
-});
+// Routes
+app.use("/api/users", authRoutes);
+app.use("/api/categories", categoryRoutes);
+app.use("/api/expenses", expenseRoutes);
+app.use("/api/earnings", earningRoutes);
 
 export default app;

@@ -1,12 +1,16 @@
 import { DataTypes, Model } from "sequelize";
 import sequelize from "../config/db.js";
-import Earning from "./earningsModel.js";
-import Expense from "./expensesModel.js";
 
-class Category extends Model {
-  id!: number;
-  name!: string;
-  type!: string; // "expense" or "earning"
+interface CategoryAttributes {
+  id: number;
+  name: string;
+  type: "expense" | "earning";
+}
+
+class Category extends Model<CategoryAttributes> implements CategoryAttributes {
+  public id!: number;
+  public name!: string;
+  public type!: "expense" | "earning";
 }
 
 Category.init(
@@ -28,9 +32,9 @@ Category.init(
   {
     sequelize,
     modelName: "Category",
+    tableName: "categories",
+    timestamps: true,
   }
 );
 
-Category.hasMany(Expense, { foreignKey: "category_id", as: "expenses" });
-Category.hasMany(Earning, { foreignKey: "category_id", as: "earnings" });
 export default Category;

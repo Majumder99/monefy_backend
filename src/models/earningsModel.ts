@@ -1,13 +1,22 @@
 import { DataTypes, Model } from "sequelize";
 import sequelize from "../config/db.js";
 
-class Earning extends Model {
-  id!: number;
-  description!: string;
-  date!: Date;
-  amount!: number;
-  user_id!: number;
-  category_id!: number;
+interface EarningAttributes {
+  id: number;
+  description: string;
+  amount: number;
+  date: Date;
+  user_id: number;
+  category_id: number;
+}
+
+class Earning extends Model<EarningAttributes> implements EarningAttributes {
+  public id!: number;
+  public description!: string;
+  public amount!: number;
+  public date!: Date;
+  public user_id!: number;
+  public category_id!: number;
 }
 
 Earning.init(
@@ -24,10 +33,15 @@ Earning.init(
     date: {
       type: DataTypes.DATE,
       allowNull: false,
+      defaultValue: DataTypes.NOW,
     },
     amount: {
-      type: DataTypes.FLOAT,
+      type: DataTypes.DECIMAL(10, 2),
       allowNull: false,
+      validate: {
+        isDecimal: true,
+        min: 0,
+      },
     },
     user_id: {
       type: DataTypes.INTEGER,
@@ -41,6 +55,8 @@ Earning.init(
   {
     sequelize,
     modelName: "Earning",
+    tableName: "earnings",
+    timestamps: true,
   }
 );
 
