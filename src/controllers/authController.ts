@@ -35,7 +35,7 @@ export class UserController {
   updateUser = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const user = await this.userService.updateUser(
-        Number(req.params.id),
+        parseInt(req.params.id),
         req.body
       );
       res.json(user);
@@ -55,7 +55,7 @@ export class UserController {
 
   deleteUser = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      await this.userService.deleteUser(Number(req.params.id));
+      await this.userService.deleteUser(parseInt(req.params.id));
       res.json({ message: "User deleted successfully" });
     } catch (error) {
       next(error);

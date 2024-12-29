@@ -1,5 +1,5 @@
-import { AppError } from "../middleware/errorHandler";
-import { Category } from "../models";
+import { AppError } from "../middlewares/errorHandler.js";
+import { Category } from "../models/index.js";
 
 export class CategoryService {
   async getAllCategories() {
