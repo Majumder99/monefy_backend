@@ -1,7 +1,7 @@
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { AppError } from "../middlewares/errorHandler.js";
-import { Earning, Expense, User } from "../models/index.js";
+import { Earning, Expense, Subscription, User } from "../models/index.js";
 
 export class UserService {
   async createUser(userData: any) {
@@ -53,12 +53,14 @@ export class UserService {
         {
           model: Expense,
           as: "expenses",
-          attributes: { exclude: ["user_id", "category_id"] },
         },
         {
           model: Earning,
           as: "earnings",
-          attributes: { exclude: ["user_id", "category_id"] },
+        },
+        {
+          model: Subscription,
+          as: "subscriptions",
         },
       ],
     });
@@ -72,12 +74,14 @@ export class UserService {
         {
           model: Expense,
           as: "expenses",
-          attributes: { exclude: ["user_id", "category_id"] },
         },
         {
           model: Earning,
           as: "earnings",
-          attributes: { exclude: ["user_id", "category_id"] },
+        },
+        {
+          model: Subscription,
+          as: "subscriptions",
         },
       ],
     });

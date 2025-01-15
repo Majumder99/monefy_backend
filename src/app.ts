@@ -6,6 +6,7 @@ import authRoutes from "./routes/authRoutes.js";
 import categoryRoutes from "./routes/categoryRoutes.js";
 import earningRoutes from "./routes/earningsRoutes.js";
 import expenseRoutes from "./routes/expensesRoutes.js";
+import subscriptionRoutes from "./routes/subscriptionRoutes.js";
 
 const app = express();
 
@@ -19,5 +20,6 @@ app.use("/api/users", authRoutes);
 app.use("/api/categories", categoryRoutes);
 app.use("/api/expenses", expenseRoutes);
 app.use("/api/earnings", earningRoutes);
+app.use("/api/subscriptions", subscriptionRoutes);
 
 export default app;

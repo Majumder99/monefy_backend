@@ -2,6 +2,7 @@ import sequelize from "../config/db.js";
 import Category from "./categoryModel.js";
 import Earning from "./earningsModel.js";
 import Expense from "./expensesModel.js";
+import Subscription from "./subscriptionModel.js";
 import User from "./userModel.js";
 
 // User associations
@@ -14,6 +15,17 @@ User.hasMany(Earning, {
   foreignKey: "user_id",
   as: "earnings",
   onDelete: "CASCADE",
+});
+// User associations
+User.hasOne(Subscription, {
+  foreignKey: "user_id",
+  as: "subscription",
+});
+
+// Subscription associations
+Subscription.belongsTo(User, {
+  foreignKey: "user_id",
+  as: "user",
 });
 
 // Category associations
@@ -58,4 +70,4 @@ export const syncDatabase = async (force: boolean = false) => {
   }
 };
 
-export { Category, Earning, Expense, User };
+export { Category, Earning, Expense, User, Subscription };

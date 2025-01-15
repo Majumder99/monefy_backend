@@ -7,6 +7,10 @@ interface UserAttributes {
   email: string;
   hashed_password: string;
   role: string;
+  isSubscribed: boolean;
+  subscriptionType: string | null;
+  subscriptionExpiryDate: Date | null;
+  category_created: number;
 }
 
 class User extends Model<UserAttributes> implements UserAttributes {
@@ -15,6 +19,10 @@ class User extends Model<UserAttributes> implements UserAttributes {
   public email!: string;
   public hashed_password!: string;
   public role!: string;
+  public isSubscribed!: boolean;
+  public subscriptionType!: string | null;
+  public subscriptionExpiryDate!: Date | null;
+  public category_created!: number;
 }
 
 User.init(
@@ -43,6 +51,22 @@ User.init(
     role: {
       type: DataTypes.ENUM("user", "admin"),
       defaultValue: "user",
+    },
+    isSubscribed: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
+    subscriptionType: {
+      type: DataTypes.ENUM("basic", "premium", "pro"),
+      allowNull: true,
+    },
+    subscriptionExpiryDate: {
+      type: DataTypes.DATE,
+      allowNull: true,
+    },
+    category_created: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
     },
   },
   {
