@@ -1,35 +1,84 @@
 import { NextFunction, Request, Response } from "express";
-import { User } from "../models/index.js";
+import { Subscription, User } from "../models/index.js";
 
 export const checkSubscription = async (
   req: Request,
   res: Response,
   next: NextFunction
-) => {
+): Promise<void> => {
   try {
-    const userId = req.user?.id; // Assuming you have user data in request
-    const user = await User.findByPk(userId);
+    // 1. Check that we have a userId in req.user
+    const userId = req.user?.userId;
+    if (!userId) {
+      res.status(401).json({ error: "Unauthorized. No user ID found." });
+      return;
+    }
 
-    if (!user || !user.isSubscribed) {
-      return res.status(403).json({
+    // 2. Fetch the user
+    const user = await User.findByPk(userId);
+    if (!user) {
+      res.status(404).json({ error: "User not found." });
+    }
+
+    // 3. Check if user is subscribed
+    if (user && !user.isSubscribed) {
+      res.status(403).json({
         error: "Subscription required to perform this action",
       });
     }
 
+    // 4. Check if the subscription has expired
     const currentDate = new Date();
-    if (user.subscriptionExpiryDate < currentDate) {
+    if (
+      user &&
+      user.subscriptionExpiryDate &&
+      user.subscriptionExpiryDate < currentDate
+    ) {
+      // Mark the user as unsubscribed
       await user.update({
         isSubscribed: false,
         subscriptionType: null,
         subscriptionExpiryDate: null,
       });
-      return res.status(403).json({
+
+      res.status(403).json({
         error: "Subscription has expired",
       });
     }
 
+    // 5. Fetch the subscription details based on user's subscriptionType
+    if (user && !user.subscriptionType) {
+      res.status(403).json({ error: "No valid subscription type found." });
+    }
+
+    const subscription =
+      user &&
+      user.subscriptionType &&
+      (await Subscription.findOne({
+        where: { type: user.subscriptionType },
+      }));
+    if (!subscription) {
+      res.status(404).json({
+        error: "Subscription details not found for this user",
+      });
+    }
+
+    // 6. Check if user has reached their category creation limit
+    if (
+      user &&
+      subscription &&
+      user.category_created >= subscription.maxCategories
+    ) {
+      res.status(403).json({
+        error:
+          "You have reached the maximum category creation limit for your subscription.",
+      });
+    }
+
+    // 7. If all checks pass, proceed to the next middleware
     next();
   } catch (error) {
-    return res.status(500).json({ error: error.message });
+    console.error("Subscription check error:", error);
+    res.status(500).json({ message: "Something went wrong", error });
   }
 };

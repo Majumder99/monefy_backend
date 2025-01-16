@@ -24,11 +24,11 @@ router.delete(
 );
 
 // Public route to view available plans
-router.get("/plans", subscriptionController.getAllPlans);
+router.get("/plans", authenticate, subscriptionController.getAllPlans);
 
 // User subscription routes
 router.post("/subscribe", authenticate, subscriptionController.subscribe);
 
-router.post("/cancel/:userId", authenticate, subscriptionController.cancel);
+router.post("/cancel", authenticate, subscriptionController.cancel);
 
 export default router;

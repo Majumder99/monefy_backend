@@ -102,23 +102,4 @@ export class SubscriptionService {
   async getAllSubscriptionPlans() {
     return await Subscription.findAll();
   }
-
-  // Check category creation limit
-  async checkCategoryLimit(userId: number): Promise<boolean> {
-    const user = await User.findByPk(userId);
-    let subscription;
-    if (!user || !user.isSubscribed) {
-      return false;
-    }
-
-    if (user.subscriptionType !== null) {
-      subscription = await Subscription.findOne({
-        where: { type: user.subscriptionType },
-      });
-    }
-
-    return subscription
-      ? user.category_created < subscription.maxCategories
-      : false;
-  }
 }

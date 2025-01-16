@@ -13,7 +13,9 @@ export class SubscriptionController {
         pricePerMonth,
         pricePerYear,
       });
-      res.status(201).json(plan);
+      res
+        .status(201)
+        .json({ message: "Subscription plan created successfully", plan });
     } catch (error) {
       res.status(400).json({ error });
     }
@@ -28,7 +30,10 @@ export class SubscriptionController {
         pricePerMonth,
         pricePerYear,
       });
-      res.status(200).json(plan);
+      res.status(200).json({
+        message: "Subscription plan updated successfully",
+        plan,
+      });
     } catch (error) {
       res.status(400).json({ error });
     }
@@ -40,7 +45,10 @@ export class SubscriptionController {
       const result = await this.subscriptionService.deleteSubscriptionPlan(
         type
       );
-      res.status(200).json(result);
+      res.status(200).json({
+        message: "Subscription plan deleted successfully",
+        result,
+      });
     } catch (error) {
       res.status(400).json({ error });
     }
@@ -49,7 +57,10 @@ export class SubscriptionController {
   async getAllPlans(req: Request, res: Response): Promise<void> {
     try {
       const plans = await this.subscriptionService.getAllSubscriptionPlans();
-      res.status(200).json(plans);
+      res.status(200).json({
+        message: "Available subscription plans",
+        plans,
+      });
     } catch (error) {
       res.status(500).json({ error });
     }
@@ -58,13 +69,17 @@ export class SubscriptionController {
   // User subscription controllers
   async subscribe(req: Request, res: Response): Promise<void> {
     try {
-      const { userId, type, paymentPeriod } = req.body;
+      const userId = req.user!.userId;
+      const { type, paymentPeriod } = req.body;
       const result = await this.subscriptionService.createUserSubscription(
         userId,
         type,
         paymentPeriod
       );
-      res.status(201).json(result);
+      res.status(201).json({
+        message: "User subscribed successfully",
+        result,
+      });
     } catch (error) {
       res.status(400).json({ error });
     }
@@ -72,9 +87,9 @@ export class SubscriptionController {
 
   async cancel(req: Request, res: Response): Promise<void> {
     try {
-      const { userId } = req.params;
+      const userId = req.user!.userId;
       const result = await this.subscriptionService.cancelUserSubscription(
-        parseInt(userId)
+        userId
       );
       res.status(200).json(result);
     } catch (error) {
