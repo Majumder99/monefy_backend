@@ -29,7 +29,11 @@ export class ExpenseService {
 
   async updateExpense(
     id: number,
-    expenseData: any,
+    expenseData: {
+      amount?: number;
+      description?: string;
+      category_id: number;
+    },
     userId: number,
     isAdmin: boolean
   ) {

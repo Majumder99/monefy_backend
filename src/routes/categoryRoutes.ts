@@ -1,17 +1,15 @@
 import express from "express";
 import { CategoryController } from "../controllers/categoryController.js";
-import { authenticate, isAdmin } from "../middlewares/authMiddleware.js";
+import { authenticate } from "../middlewares/authMiddleware.js";
 import { checkSubscription } from "../middlewares/subscribeMiddelware.js";
 
 const router = express.Router();
 const categoryController = new CategoryController();
 
 router.get("/", authenticate, categoryController.getAllCategories);
-router.post("/", authenticate, isAdmin, categoryController.createCategory);
-router.patch("/:id", authenticate, isAdmin, categoryController.updateCategory);
-router.delete("/:id", authenticate, isAdmin, categoryController.deleteCategory);
+router.get("/:id", authenticate, categoryController.getCategoryById);
 
-// Protected routes - require subscription
+// Require Subscription
 router.post(
   "/",
   authenticate,
@@ -19,7 +17,7 @@ router.post(
   categoryController.createCategory
 );
 
-router.put(
+router.patch(
   "/:id",
   authenticate,
   checkSubscription,

@@ -16,10 +16,15 @@ User.hasMany(Earning, {
   as: "earnings",
   onDelete: "CASCADE",
 });
-// User associations
+User.hasMany(Category, {
+  foreignKey: "user_id",
+  as: "categories",
+  onDelete: "CASCADE",
+});
 User.hasOne(Subscription, {
   foreignKey: "user_id",
   as: "subscription",
+  onDelete: "CASCADE",
 });
 
 // Subscription associations
@@ -38,6 +43,10 @@ Category.hasMany(Earning, {
   foreignKey: "category_id",
   as: "earnings",
   onDelete: "CASCADE",
+});
+Category.belongsTo(User, {
+  foreignKey: "user_id",
+  as: "user",
 });
 
 // Expense associations
@@ -70,4 +79,4 @@ export const syncDatabase = async (force: boolean = false) => {
   }
 };
 
-export { Category, Earning, Expense, User, Subscription };
+export { Category, Earning, Expense, Subscription, User };

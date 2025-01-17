@@ -29,7 +29,6 @@ Subscription.init(
     },
     type: {
       type: DataTypes.ENUM("basic", "premium", "pro"),
-      unique: true,
       allowNull: false,
     },
     maxCategories: {
@@ -50,6 +49,12 @@ Subscription.init(
     modelName: "Subscription",
     tableName: "subscriptions",
     timestamps: true,
+    indexes: [
+      {
+        unique: true,
+        fields: ["type"],
+      }
+    ]
   }
 );
 

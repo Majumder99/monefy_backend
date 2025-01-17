@@ -29,7 +29,11 @@ export class EarningService {
 
   async updateEarning(
     id: number,
-    earningData: any,
+    earningData: {
+      amount?: number;
+      description?: string;
+      category_id: number;
+    },
     userId: number,
     isAdmin: boolean
   ) {

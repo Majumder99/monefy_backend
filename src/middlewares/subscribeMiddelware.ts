@@ -29,21 +29,22 @@ export const checkSubscription = async (
 
     // 4. Check if the subscription has expired
     const currentDate = new Date();
-    if (
-      user &&
-      user.subscriptionExpiryDate &&
-      user.subscriptionExpiryDate < currentDate
-    ) {
-      // Mark the user as unsubscribed
-      await user.update({
-        isSubscribed: false,
-        subscriptionType: null,
-        subscriptionExpiryDate: null,
-      });
 
-      res.status(403).json({
-        error: "Subscription has expired",
-      });
+    if (user && user.subscriptionExpiryDate) {
+      const subscriptionExpiryDate = new Date(user.subscriptionExpiryDate);
+
+      if (subscriptionExpiryDate < currentDate) {
+        // Mark the user as unsubscribed
+        await user.update({
+          isSubscribed: false,
+          subscriptionType: null,
+          subscriptionExpiryDate: null,
+        });
+
+        res.status(403).json({
+          error: "Subscription has expired",
+        });
+      }
     }
 
     // 5. Fetch the subscription details based on user's subscriptionType

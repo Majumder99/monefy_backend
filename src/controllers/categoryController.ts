@@ -19,7 +19,14 @@ export class CategoryController {
 
   createCategory = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const category = await this.categoryService.createCategory(req.body);
+      const userID = req.user?.userId;
+      if (userID === undefined) {
+        throw new Error("User ID is undefined");
+      }
+      const category = await this.categoryService.createCategory(
+        parseInt(userID.toString()),
+        req.body
+      );
       res.status(201).json(category);
     } catch (error) {
       next(error);
@@ -40,8 +47,26 @@ export class CategoryController {
 
   deleteCategory = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      await this.categoryService.deleteCategory(parseInt(req.params.id));
+      const userID = req.user?.userId;
+      if (userID === undefined) {
+        throw new Error("User ID is undefined");
+      }
+      await this.categoryService.deleteCategory(
+        parseInt(userID.toString()),
+        parseInt(req.params.id)
+      );
       res.status(204).send();
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  getCategoryById = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const category = await this.categoryService.getCategoryById(
+        parseInt(req.params.id)
+      );
+      res.json(category);
     } catch (error) {
       next(error);
     }

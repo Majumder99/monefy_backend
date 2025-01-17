@@ -15,6 +15,10 @@ export async function createSuperAdmin() {
         email: "admin@example.com",
         hashed_password: hashedPassword,
         role: "admin",
+        isSubscribed: true,
+        category_created: 0,
+        subscriptionExpiryDate: new Date(2030, 11, 31),
+        subscriptionType: "pro",
       });
       console.log("Super admin created successfully");
     } else {

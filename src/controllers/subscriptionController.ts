@@ -24,18 +24,18 @@ export class SubscriptionController {
   async updatePlan(req: Request, res: Response): Promise<void> {
     try {
       const { type } = req.params;
-      const { maxCategories, pricePerMonth, pricePerYear } = req.body;
-      const plan = await this.subscriptionService.updateSubscriptionPlan(type, {
-        maxCategories,
-        pricePerMonth,
-        pricePerYear,
-      });
+
+      const plan = await this.subscriptionService.updateSubscriptionPlan(
+        type,
+        req.body
+      );
+
       res.status(200).json({
         message: "Subscription plan updated successfully",
         plan,
       });
     } catch (error) {
-      res.status(400).json({ error });
+      res.status(400).json({ message: error });
     }
   }
 

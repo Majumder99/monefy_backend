@@ -1,7 +1,13 @@
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { AppError } from "../middlewares/errorHandler.js";
-import { Earning, Expense, Subscription, User } from "../models/index.js";
+import {
+  Category,
+  Earning,
+  Expense,
+  Subscription,
+  User,
+} from "../models/index.js";
 
 export class UserService {
   async createUser(userData: any) {
@@ -17,6 +23,10 @@ export class UserService {
       ...userData,
       hashed_password: hashedPassword,
       role: "user",
+      isSubscribed: false,
+      subscriptionType: null,
+      subscriptionExpiryDate: null,
+      category_created: 0,
     });
 
     const { hashed_password, ...userWithoutPassword } = user.get();
@@ -24,25 +34,47 @@ export class UserService {
   }
 
   async loginUser(email: string, password: string) {
+    // Ensure the JWT secret is defined
+    const jwtSecret = process.env.JWT_SECRET;
+    if (!jwtSecret) {
+      throw new Error("JWT_SECRET environment variable is not defined");
+    }
+
+    console.log("before user checking");
+    // Check if the email exists
     const user = await User.findOne({ where: { email } });
     if (!user) {
       throw new AppError("Invalid credentials", 401);
     }
+    console.log("after usre checking", user.dataValues);
+    // Ensure the password is provided
+    if (!password) {
+      throw new AppError("Password is required", 400);
+    }
 
+    console.log("before validate passowrd");
+
+    // Validate the password
     const isValidPassword = await bcrypt.compare(
       password,
-      user.hashed_password
+      user.dataValues.hashed_password
     );
     if (!isValidPassword) {
       throw new AppError("Invalid credentials", 401);
     }
 
+    // Generate the token
     const token = jwt.sign(
-      { userId: user.id, role: user.role },
-      process.env.JWT_SECRET!,
-      { expiresIn: "24h" }
+      { userId: user.dataValues.id, role: user.dataValues.role },
+      jwtSecret,
+      {
+        expiresIn: "24h",
+      }
     );
+
+    // Exclude the hashed password from the returned user object
     const { hashed_password, ...userWithoutPassword } = user.get();
+
     return { user: userWithoutPassword, token };
   }
 
@@ -60,7 +92,11 @@ export class UserService {
         },
         {
           model: Subscription,
-          as: "subscriptions",
+          as: "subscription",
+        },
+        {
+          model: Category,
+          as: "categories",
         },
       ],
     });
@@ -81,7 +117,11 @@ export class UserService {
         },
         {
           model: Subscription,
-          as: "subscriptions",
+          as: "subscription",
+        },
+        {
+          model: Category,
+          as: "categories",
         },
       ],
     });
