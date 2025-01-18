@@ -1,0 +1,314 @@
+{
+	"info": {
+		"_postman_id": "88072351-4c23-4c6e-b054-1128878fa93b",
+		"name": "Subscription-non stripe",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "29781502"
+	},
+	"item": [
+		{
+			"name": "Create Plan",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsInJvbGUiOiJhZG1pbiIsImlhdCI6MTczNzE5Mjc1OSwiZXhwIjoxNzM3Mjc5MTU5fQ.QnUQzJ-wrMSP_kDPfuajdd8cpk3hUDMm_9PEv4vgx0Q",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"type\": \"basic\", //\"basic|premium|pro\"\r\n    \"maxCategories\": 2,\r\n    \"pricePerMonth\": 10,\r\n    \"pricePerYear\": 100\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{Public_URL}}/api/plans",
+					"host": [
+						"{{Public_URL}}"
+					],
+					"path": [
+						"api",
+						"plans"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Edit Plan",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsInJvbGUiOiJhZG1pbiIsImlhdCI6MTczNTUwMTkxMSwiZXhwIjoxNzM1NTg4MzExfQ.RvdW7CBzjAl4mOIBwhuH_pKrveAdXnU3rdVAc4kolOk",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"maxCategories\": 5,\r\n    \"pricePerMonth\": 10,\r\n    \"pricePerYear\": 110\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{Public_URL}}/api/plans/pro",
+					"host": [
+						"{{Public_URL}}"
+					],
+					"path": [
+						"api",
+						"plans",
+						"pro"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Plan",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsInJvbGUiOiJhZG1pbiIsImlhdCI6MTczNTUwMTkxMSwiZXhwIjoxNzM1NTg4MzExfQ.RvdW7CBzjAl4mOIBwhuH_pKrveAdXnU3rdVAc4kolOk",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{Public_URL}}/api/plans/pro",
+					"host": [
+						"{{Public_URL}}"
+					],
+					"path": [
+						"api",
+						"plans",
+						"pro"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "User Subscribe",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIsInJvbGUiOiJ1c2VyIiwiaWF0IjoxNzM3MTkyNzc4LCJleHAiOjE3MzcyNzkxNzh9.zld80uv-mP18F4lXmLRwumMb9VAF7FH-XAffVRo5_Wg",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"type\": \"basic\",\r\n    \"paymentPeriod\": \"yearly\" // \"monthly\" | \"yearly\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{Public_URL}}/api/subscriptions/subscribe",
+					"host": [
+						"{{Public_URL}}"
+					],
+					"path": [
+						"api",
+						"subscriptions",
+						"subscribe"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "User Cancel",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsInJvbGUiOiJhZG1pbiIsImlhdCI6MTczNTUwMTkxMSwiZXhwIjoxNzM1NTg4MzExfQ.RvdW7CBzjAl4mOIBwhuH_pKrveAdXnU3rdVAc4kolOk",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{Public_URL}}/api/subscriptions/cancel",
+					"host": [
+						"{{Public_URL}}"
+					],
+					"path": [
+						"api",
+						"subscriptions",
+						"cancel"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "All Plans",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIsInJvbGUiOiJ1c2VyIiwiaWF0IjoxNzM3MTkxODY4LCJleHAiOjE3MzcyNzgyNjh9.o87gNZ2XtFvx7JcMBddTghMGvGNJHLj7eed2p72GcfY",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{Public_URL}}/api/plans",
+					"host": [
+						"{{Public_URL}}"
+					],
+					"path": [
+						"api",
+						"plans"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "User Subscription",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIsInJvbGUiOiJ1c2VyIiwiaWF0IjoxNzM3MTkxODY4LCJleHAiOjE3MzcyNzgyNjh9.o87gNZ2XtFvx7JcMBddTghMGvGNJHLj7eed2p72GcfY",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{Public_URL}}/api/subscriptions",
+					"host": [
+						"{{Public_URL}}"
+					],
+					"path": [
+						"api",
+						"subscriptions"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
