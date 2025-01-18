@@ -22,7 +22,7 @@ export const checkSubscription = async (
     }
 
     // 3) Check if user is subscribed
-    if (!user.isSubscribed) {
+    if (!user.dataValues.isSubscribed) {
       res
         .status(403)
         .json({ error: "Subscription required to perform this action." });
@@ -30,9 +30,9 @@ export const checkSubscription = async (
     }
 
     // 4) Check if the subscription has expired
-    if (user.subscriptionExpiryDate) {
+    if (user.dataValues.subscriptionExpiryDate) {
       const currentDate = new Date();
-      const subscriptionExpiryDate = new Date(user.subscriptionExpiryDate);
+      const subscriptionExpiryDate = new Date(user.dataValues.subscriptionExpiryDate);
 
       if (subscriptionExpiryDate < currentDate) {
         // Mark the user as unsubscribed
@@ -48,25 +48,25 @@ export const checkSubscription = async (
     }
 
     // 5) Check if there's a valid subscription type on the user
-    if (!user.subscriptionType) {
+    if (!user.dataValues.subscriptionType) {
       res.status(403).json({ error: "No valid subscription type found." });
       return;
     }
 
     // 6) Fetch the plan details from the Plans table based on user.subscriptionType
     const plan = await Plans.findOne({
-      where: { type: user.subscriptionType }, // e.g. "basic", "premium", "pro"
+      where: { type: user.dataValues.subscriptionType }, // e.g. "basic", "premium", "pro"
     });
 
     if (!plan) {
       res.status(404).json({
-        error: `Plan details not found for subscription type: ${user.subscriptionType}`,
+        error: `Plan details not found for subscription type: ${user.dataValues.subscriptionType}`,
       });
       return;
     }
 
     // 7) Check if user has reached their category creation limit
-    if (user.category_created >= plan.maxCategories) {
+    if (user.dataValues.category_created >= plan.dataValues.maxCategories) {
       res.status(403).json({
         error:
           "You have reached the maximum category creation limit for your subscription plan.",

@@ -27,10 +27,8 @@ export class PlansService {
   }
 
   public async createPlan(planData: CreatePlanData) {
-    // Optionally check if a plan with the same "type" already exists
-    // e.g.:
-    // const existing = await Plans.findOne({ where: { type: planData.type } });
-    // if (existing) throw new Error("That plan type already exists");
+    const existing = await Plans.findOne({ where: { type: planData.type } });
+    if (existing) throw new Error("That plan type already exists");
 
     return Plans.create(planData);
   }

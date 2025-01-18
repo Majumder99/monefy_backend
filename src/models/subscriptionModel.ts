@@ -4,7 +4,7 @@ import sequelize from "../config/db.js";
 interface SubscriptionAttributes {
   id: number;
   user_id: number; // which user is subscribed
-  plan_type: string; // which plan they're on
+  plan_id: number; // which plan they're on
   startDate?: Date | null;
   endDate?: Date | null;
   createdAt?: Date;
@@ -20,7 +20,7 @@ class Subscription
 {
   public id!: number;
   public user_id!: number;
-  public plan_type!: string;
+  public plan_id!: number;
   public startDate?: Date | null;
   public endDate?: Date | null;
 
@@ -39,8 +39,8 @@ Subscription.init(
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    plan_type: {
-      type: DataTypes.STRING,
+    plan_id: {
+      type: DataTypes.INTEGER,
       allowNull: false,
     },
     startDate: {

@@ -34,7 +34,7 @@ export class SubscriptionService {
     if (existingSubscription) {
       // update
       await existingSubscription.update({
-        plan_type: plan.type,
+        plan_id: plan.dataValues.id,
         startDate: new Date(),
         endDate,
       });
@@ -42,7 +42,7 @@ export class SubscriptionService {
       // create
       await Subscription.create({
         user_id: userId,
-        plan_type: plan.type,
+        plan_id: plan.dataValues.id,
         startDate: new Date(),
         endDate,
       });
@@ -51,7 +51,7 @@ export class SubscriptionService {
     // Update user with quick subscription info (optional):
     await user.update({
       isSubscribed: true,
-      subscriptionType: plan.type, // e.g. "basic"
+      subscriptionType: plan.dataValues.type, // e.g. "basic"
       subscriptionExpiryDate: endDate,
       category_created: 0,
     });
@@ -59,7 +59,7 @@ export class SubscriptionService {
     return {
       message: "Subscription created successfully",
       subscriptionDetails: {
-        planType: plan.type,
+        planType: plan.dataValues.type,
         expiryDate: endDate,
         maxCategories: plan.maxCategories,
       },

@@ -1,15 +1,11 @@
-import { Request, Response, NextFunction } from "express";
+import { NextFunction, Request, Response } from "express";
 import { SubscriptionService } from "../services/subscriptionService.js";
 
 export class SubscriptionController {
   private subscriptionService = new SubscriptionService();
 
   // POST /subscribe
-   subscribe = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) => {
+  subscribe = async (req: Request, res: Response, next: NextFunction) => {
     try {
       // If your "authenticate" middleware sets req.user!.userId
       const userId = req.user!.userId;
@@ -32,7 +28,7 @@ export class SubscriptionController {
   };
 
   // POST /cancel
-   cancel = async (req: Request, res: Response, next: NextFunction) => {
+  cancel = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const userId = req.user!.userId;
 
@@ -46,7 +42,7 @@ export class SubscriptionController {
   };
 
   // GET /user subscription
-   getUserSubscription = async (
+  getUserSubscription = async (
     req: Request,
     res: Response,
     next: NextFunction

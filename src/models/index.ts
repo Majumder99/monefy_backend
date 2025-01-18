@@ -36,13 +36,13 @@ Subscription.belongsTo(User, {
 
 // Associations: A Subscription belongs to a single Plan
 Subscription.belongsTo(Plans, {
-  foreignKey: "plan_type",
+  foreignKey: "plan_id",
   as: "plan",
 });
 
 // A Plan can be used by many subscriptions
 Plans.hasMany(Subscription, {
-  foreignKey: "plan_type",
+  foreignKey: "plan_id",
   as: "subscriptions",
   onDelete: "CASCADE",
 });

@@ -1,6 +1,7 @@
 import dotenv from "dotenv";
 import app from "./app.js";
 import sequelize from "./config/db.js";
+import { syncDatabase } from "./models/index.js";
 import { createSuperAdmin } from "./utils/createSuperAdmin.js";
 
 dotenv.config();
@@ -13,8 +14,8 @@ async function startServer() {
     console.log("Database connected");
 
     // Sync database and create super admin
-    await sequelize.sync({ alter: true }); // Use alter: true in development, false in production
-    // await syncDatabase(false);
+    // await sequelize.sync({ alter: true }); // Use alter: true in development, false in production
+    await syncDatabase(true);
     await createSuperAdmin();
 
     app.listen(PORT, () => {
