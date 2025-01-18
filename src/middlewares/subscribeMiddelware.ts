@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { Subscription, User } from "../models/index.js";
+import { Plans, User } from "../models"; // Import Plans instead of Subscription
 
 export const checkSubscription = async (
   req: Request,
@@ -7,30 +7,31 @@ export const checkSubscription = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    // 1. Check that we have a userId in req.user
+    // 1) Check that we have a userId in req.user (from your auth middleware)
     const userId = req.user?.userId;
     if (!userId) {
       res.status(401).json({ error: "Unauthorized. No user ID found." });
       return;
     }
 
-    // 2. Fetch the user
+    // 2) Fetch the user
     const user = await User.findByPk(userId);
     if (!user) {
       res.status(404).json({ error: "User not found." });
+      return;
     }
 
-    // 3. Check if user is subscribed
-    if (user && !user.isSubscribed) {
-      res.status(403).json({
-        error: "Subscription required to perform this action",
-      });
+    // 3) Check if user is subscribed
+    if (!user.isSubscribed) {
+      res
+        .status(403)
+        .json({ error: "Subscription required to perform this action." });
+      return;
     }
 
-    // 4. Check if the subscription has expired
-    const currentDate = new Date();
-
-    if (user && user.subscriptionExpiryDate) {
+    // 4) Check if the subscription has expired
+    if (user.subscriptionExpiryDate) {
+      const currentDate = new Date();
       const subscriptionExpiryDate = new Date(user.subscriptionExpiryDate);
 
       if (subscriptionExpiryDate < currentDate) {
@@ -41,42 +42,39 @@ export const checkSubscription = async (
           subscriptionExpiryDate: null,
         });
 
-        res.status(403).json({
-          error: "Subscription has expired",
-        });
+        res.status(403).json({ error: "Subscription has expired." });
+        return;
       }
     }
 
-    // 5. Fetch the subscription details based on user's subscriptionType
-    if (user && !user.subscriptionType) {
+    // 5) Check if there's a valid subscription type on the user
+    if (!user.subscriptionType) {
       res.status(403).json({ error: "No valid subscription type found." });
+      return;
     }
 
-    const subscription =
-      user &&
-      user.subscriptionType &&
-      (await Subscription.findOne({
-        where: { type: user.subscriptionType },
-      }));
-    if (!subscription) {
+    // 6) Fetch the plan details from the Plans table based on user.subscriptionType
+    const plan = await Plans.findOne({
+      where: { type: user.subscriptionType }, // e.g. "basic", "premium", "pro"
+    });
+
+    if (!plan) {
       res.status(404).json({
-        error: "Subscription details not found for this user",
+        error: `Plan details not found for subscription type: ${user.subscriptionType}`,
       });
+      return;
     }
 
-    // 6. Check if user has reached their category creation limit
-    if (
-      user &&
-      subscription &&
-      user.category_created >= subscription.maxCategories
-    ) {
+    // 7) Check if user has reached their category creation limit
+    if (user.category_created >= plan.maxCategories) {
       res.status(403).json({
         error:
-          "You have reached the maximum category creation limit for your subscription.",
+          "You have reached the maximum category creation limit for your subscription plan.",
       });
+      return;
     }
 
-    // 7. If all checks pass, proceed to the next middleware
+    // 8) All checks passed; proceed
     next();
   } catch (error) {
     console.error("Subscription check error:", error);

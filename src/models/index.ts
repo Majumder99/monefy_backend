@@ -93,4 +93,4 @@ export const syncDatabase = async (force: boolean = false) => {
   }
 };
 
-export { Category, Earning, Expense, Subscription, User };
+export { Category, Earning, Expense, Plans, Subscription, User };

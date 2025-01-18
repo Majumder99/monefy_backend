@@ -7,7 +7,7 @@ const router = Router();
 const plansController = new PlansController();
 
 // GET all plans
-router.get("/", authenticate, isAdmin, plansController.getAllPlans);
+router.get("/", authenticate, plansController.getAllPlans);
 
 // CREATE a plan
 router.post("/", authenticate, isAdmin, plansController.createPlan);
