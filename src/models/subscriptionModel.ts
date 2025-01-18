@@ -1,23 +1,31 @@
-import { DataTypes, Model } from "sequelize";
+import { DataTypes, Model, Optional } from "sequelize";
 import sequelize from "../config/db.js";
 
 interface SubscriptionAttributes {
   id: number;
-  type: string;
-  maxCategories: number;
-  pricePerMonth: number;
-  pricePerYear: number;
+  user_id: number; // which user is subscribed
+  plan_type: string; // which plan they're on
+  startDate?: Date | null;
+  endDate?: Date | null;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
+// If you use TypeScript, define optional creation fields as well
+type SubscriptionCreationAttributes = Optional<SubscriptionAttributes, "id">;
+
 class Subscription
-  extends Model<SubscriptionAttributes>
+  extends Model<SubscriptionAttributes, SubscriptionCreationAttributes>
   implements SubscriptionAttributes
 {
   public id!: number;
-  public type!: string;
-  public maxCategories!: number;
-  public pricePerMonth!: number;
-  public pricePerYear!: number;
+  public user_id!: number;
+  public plan_type!: string;
+  public startDate?: Date | null;
+  public endDate?: Date | null;
+
+  public readonly createdAt!: Date;
+  public readonly updatedAt!: Date;
 }
 
 Subscription.init(
@@ -27,21 +35,21 @@ Subscription.init(
       autoIncrement: true,
       primaryKey: true,
     },
-    type: {
-      type: DataTypes.ENUM("basic", "premium", "pro"),
-      allowNull: false,
-    },
-    maxCategories: {
+    user_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    pricePerMonth: {
-      type: DataTypes.FLOAT,
+    plan_type: {
+      type: DataTypes.STRING,
       allowNull: false,
     },
-    pricePerYear: {
-      type: DataTypes.FLOAT,
-      allowNull: false,
+    startDate: {
+      type: DataTypes.DATE,
+      allowNull: true,
+    },
+    endDate: {
+      type: DataTypes.DATE,
+      allowNull: true,
     },
   },
   {
@@ -49,12 +57,6 @@ Subscription.init(
     modelName: "Subscription",
     tableName: "subscriptions",
     timestamps: true,
-    indexes: [
-      {
-        unique: true,
-        fields: ["type"],
-      }
-    ]
   }
 );
 

@@ -2,6 +2,7 @@ import sequelize from "../config/db.js";
 import Category from "./categoryModel.js";
 import Earning from "./earningsModel.js";
 import Expense from "./expensesModel.js";
+import Plans from "./plansModel.js";
 import Subscription from "./subscriptionModel.js";
 import User from "./userModel.js";
 
@@ -27,10 +28,23 @@ User.hasOne(Subscription, {
   onDelete: "CASCADE",
 });
 
-// Subscription associations
+// Associations: A Subscription belongs to a single User
 Subscription.belongsTo(User, {
   foreignKey: "user_id",
   as: "user",
+});
+
+// Associations: A Subscription belongs to a single Plan
+Subscription.belongsTo(Plans, {
+  foreignKey: "plan_type",
+  as: "plan",
+});
+
+// A Plan can be used by many subscriptions
+Plans.hasMany(Subscription, {
+  foreignKey: "plan_type",
+  as: "subscriptions",
+  onDelete: "CASCADE",
 });
 
 // Category associations
