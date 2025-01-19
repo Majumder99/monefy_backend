@@ -1,4 +1,4 @@
-import { Plans, Subscription, User } from "../models/index.js";
+import { Category, Plans, Subscription, User } from "../models/index.js";
 
 export class SubscriptionService {
   // 1) Create or update user subscription
@@ -84,9 +84,13 @@ export class SubscriptionService {
     // You can either destroy the row...
     await subscription.destroy();
 
-    // ...or set endDate = new Date() for historical record. e.g.:
-    // await subscription.update({ endDate: new Date() });
+    // option 1
+    await Category.destroy({
+      where: { user_id: userId },
+    });
 
+    // option 2
+    // await user.destroy();
     // Also update user fields
     await user.update({
       isSubscribed: false,
@@ -100,6 +104,10 @@ export class SubscriptionService {
   // 3) Get all plans (the admin-defined plan list)
   async getAllPlans() {
     return Plans.findAll();
+  }
+
+  async getPlan(type: string) {
+    return Plans.findOne({ where: { type } });
   }
 
   // 4) (Optional) get user subscription info

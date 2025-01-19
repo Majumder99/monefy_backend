@@ -23,7 +23,10 @@ export class CategoryService {
     // update user category count
     await user.increment("category_created");
 
-    return await Category.create(categoryData);
+    return await Category.create({
+      ...categoryData,
+      user_id: userID,
+    });
   }
 
   async updateCategory(id: number, categoryData: any) {

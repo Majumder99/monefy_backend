@@ -5,12 +5,14 @@ interface CategoryAttributes {
   id: number;
   name: string;
   type: "expense" | "earning";
+  user_id: number;
 }
 
 class Category extends Model<CategoryAttributes> implements CategoryAttributes {
   public id!: number;
   public name!: string;
   public type!: "expense" | "earning";
+  public user_id!: number;
 }
 
 Category.init(
@@ -26,6 +28,10 @@ Category.init(
     },
     type: {
       type: DataTypes.ENUM("expense", "earning"),
+      allowNull: false,
+    },
+    user_id: {
+      type: DataTypes.INTEGER,
       allowNull: false,
     },
   },

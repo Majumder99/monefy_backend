@@ -14,9 +14,9 @@ async function startServer() {
     console.log("Database connected");
 
     // Sync database and create super admin
-    // await sequelize.sync({ alter: true }); // Use alter: true in development, false in production
-    await syncDatabase(true);
-    await createSuperAdmin();
+    await sequelize.sync({ alter: true }); // Use alter: true in development, false in production
+    // await syncDatabase(true);
+    // await createSuperAdmin();
 
     app.listen(PORT, () => {
       console.log(`Server running on port ${PORT}`);

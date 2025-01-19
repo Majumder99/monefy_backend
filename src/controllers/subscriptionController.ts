@@ -1,4 +1,6 @@
 import { NextFunction, Request, Response } from "express";
+import Stripe from "stripe";
+import stripe from "../config/stripe.js";
 import { SubscriptionService } from "../services/subscriptionService.js";
 
 export class SubscriptionController {
@@ -7,23 +9,117 @@ export class SubscriptionController {
   // POST /subscribe
   subscribe = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      // If your "authenticate" middleware sets req.user!.userId
-      const userId = req.user!.userId;
-
-      // e.g. { type: "basic", paymentPeriod: "monthly" }
+      const userId = req.user!.userId; // Set by authenticate middleware
       const { type, paymentPeriod } = req.body;
 
-      const result = await this.subscriptionService.createUserSubscription(
-        userId,
-        type,
-        paymentPeriod
-      );
-      res.status(201).json({
-        message: "User subscribed successfully",
-        result,
+      // Retrieve the plan details
+      const plan = await this.subscriptionService.getPlan(type);
+      if (!plan) throw new Error("Invalid plan type");
+
+      const priceId =
+        paymentPeriod === "monthly"
+          ? plan.dataValues.pricePerMonth
+          : plan.dataValues.pricePerYear;
+      if (!priceId) throw new Error("Invalid payment period");
+
+      // Create Stripe Checkout Session
+      const session = await stripe.checkout.sessions.create({
+        payment_method_types: ["card"],
+        line_items: [
+          {
+            price_data: {
+              currency: "usd",
+              product_data: {
+                name: plan.dataValues.type,
+                description: "Subscription plan",
+                images: ["https://example.com/t-shirt.png"],
+              },
+              unit_amount: priceId * 100, // Stripe requires amount in cents
+              recurring: {
+                interval: paymentPeriod === "monthly" ? "month" : "year",
+              },
+            },
+            quantity: 1,
+          },
+        ],
+        mode: "subscription",
+        success_url: `${process.env.BASE_URL}/api/subscriptions/success?session_id={CHECKOUT_SESSION_ID}`,
+        cancel_url: `${process.env.BASE_URL}/api/subscriptions/cancel`,
+        metadata: {
+          userId: userId,
+          planType: type,
+          paymentPeriod: paymentPeriod,
+        },
       });
+      console.log("subscription session", session);
+      res.status(200).json({ url: session.url });
+      // if (session.url) {
+      //   res.redirect(session.url);
+      // } else {
+      //   throw new Error("Session URL is null");
+      // }
     } catch (error) {
       next(error);
+    }
+  };
+
+  // POST /webhook (Stripe webhook to handle subscription events)
+  webhook = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
+    try {
+      const sig = req.headers["stripe-signature"] as string;
+      console.log("signature ", sig);
+
+      let event;
+      try {
+        // Pass the *raw* body, not a parsed object
+        event = stripe.webhooks.constructEvent(
+          req.body,
+          sig,
+          process.env.STRIPE_WEBHOOK_SECRET!
+        );
+      } catch (err: any) {
+        console.error("Webhook signature verification failed:", err.message);
+        res.status(400).send(`Webhook Error: ${err.message}`);
+      }
+
+      // At this point, the signature was verified. Now handle `event`:
+      if (!event) {
+        throw new Error("Event is undefined");
+      }
+
+      switch (event.type) {
+        case "checkout.session.completed": {
+          const session = event.data.object as Stripe.Checkout.Session;
+          console.log("Checkout Session Completed:", session.id);
+          // ... handle successful checkout session ...
+          const userId = session.metadata?.userId; // Assuming metadata contains userId
+
+          if (userId) {
+            await this.subscriptionService.createUserSubscription(
+              Number(userId),
+              session.metadata?.planType ?? "",
+              session.metadata?.paymentPeriod === "monthly" ||
+                session.metadata?.paymentPeriod === "yearly"
+                ? session.metadata.paymentPeriod
+                : "monthly"
+            );
+          }
+          break;
+        }
+        default:
+          console.log(`Unhandled event type ${event.type}`);
+          break;
+      }
+
+      // Return a 200 to acknowledge receipt of the event
+      res.sendStatus(200);
+    } catch (err) {
+      console.error(err);
+      res.status(400).send(`Webhook Error: ${err}`);
     }
   };
 
@@ -54,5 +150,17 @@ export class SubscriptionController {
     } catch (error) {
       next(error);
     }
+  };
+
+  // GET /success
+  successPage = async (req: Request, res: Response) => {
+    // You can redirect to a success page here(ejs success.ejs)
+    // res.render("success.ejs", { title: "Subscription successful!" });
+    res.send("Successfully payment");
+  };
+
+  // GET /cancel
+  cancelPage = async (req: Request, res: Response) => {
+    res.redirect("/");
   };
 }
