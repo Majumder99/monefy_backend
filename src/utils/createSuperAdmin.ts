@@ -20,7 +20,6 @@ export async function createSuperAdmin() {
         subscriptionExpiryDate: new Date(2030, 11, 31),
         subscriptionType: "pro",
       });
-      console.log("Super admin created successfully");
     } else {
       console.log("Super admin already exists");
     }

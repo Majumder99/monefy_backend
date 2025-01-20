@@ -43,21 +43,15 @@ export class SubscriptionController {
           },
         ],
         mode: "subscription",
-        success_url: `${process.env.BASE_URL}/api/subscriptions/success?session_id={CHECKOUT_SESSION_ID}`,
-        cancel_url: `${process.env.BASE_URL}/api/subscriptions/cancel`,
+        success_url: `${process.env.CLIENT_PUBLIC_URL}/success?session_id={CHECKOUT_SESSION_ID}`,
+        cancel_url: `${process.env.CLIENT_PUBLIC_URL}/cancel`,
         metadata: {
           userId: userId,
           planType: type,
           paymentPeriod: paymentPeriod,
         },
       });
-      console.log("subscription session", session);
       res.status(200).json({ url: session.url });
-      // if (session.url) {
-      //   res.redirect(session.url);
-      // } else {
-      //   throw new Error("Session URL is null");
-      // }
     } catch (error) {
       next(error);
     }
@@ -71,7 +65,6 @@ export class SubscriptionController {
   ): Promise<void> => {
     try {
       const sig = req.headers["stripe-signature"] as string;
-      console.log("signature ", sig);
 
       let event;
       try {
@@ -82,7 +75,6 @@ export class SubscriptionController {
           process.env.STRIPE_WEBHOOK_SECRET!
         );
       } catch (err: any) {
-        console.error("Webhook signature verification failed:", err.message);
         res.status(400).send(`Webhook Error: ${err.message}`);
       }
 
@@ -94,8 +86,6 @@ export class SubscriptionController {
       switch (event.type) {
         case "checkout.session.completed": {
           const session = event.data.object as Stripe.Checkout.Session;
-          console.log("Checkout Session Completed:", session.id);
-          // ... handle successful checkout session ...
           const userId = session.metadata?.userId; // Assuming metadata contains userId
 
           if (userId) {
@@ -111,14 +101,13 @@ export class SubscriptionController {
           break;
         }
         default:
-          console.log(`Unhandled event type ${event.type}`);
+          res.status(500).json({ message: "Error in server", event });
           break;
       }
 
       // Return a 200 to acknowledge receipt of the event
       res.sendStatus(200);
     } catch (err) {
-      console.error(err);
       res.status(400).send(`Webhook Error: ${err}`);
     }
   };

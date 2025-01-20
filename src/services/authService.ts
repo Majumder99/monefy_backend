@@ -40,19 +40,15 @@ export class UserService {
       throw new Error("JWT_SECRET environment variable is not defined");
     }
 
-    console.log("before user checking");
     // Check if the email exists
     const user = await User.findOne({ where: { email } });
     if (!user) {
       throw new AppError("Invalid credentials", 401);
     }
-    console.log("after usre checking", user.dataValues);
     // Ensure the password is provided
     if (!password) {
       throw new AppError("Password is required", 400);
     }
-
-    console.log("before validate passowrd");
 
     // Validate the password
     const isValidPassword = await bcrypt.compare(

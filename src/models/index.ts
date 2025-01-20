@@ -83,14 +83,4 @@ Earning.belongsTo(Category, {
   as: "category",
 });
 
-export const syncDatabase = async (force: boolean = false) => {
-  try {
-    await sequelize.sync({ force });
-    console.log("Database synchronized successfully");
-  } catch (error) {
-    console.error("Error synchronizing database:", error);
-    throw error;
-  }
-};
-
 export { Category, Earning, Expense, Plans, Subscription, User };

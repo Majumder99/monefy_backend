@@ -6,9 +6,7 @@ dotenv.config();
 
 const dbConfig = {
   development: {
-    url:
-      process.env.DATABASE_URL ||
-      "postgresql://postgres:yourpassword@localhost:5432/monefy",
+    url: process.env.POSTGRESQL_URL,
     options: {
       dialect: "postgres" as const,
       logging: false,
@@ -27,7 +25,7 @@ const dbConfig = {
     },
   },
   production: {
-    url: process.env.DATABASE_URL,
+    url: process.env.POSTGRESQL_URL,
     options: {
       dialect: "postgres" as const,
       logging: false,

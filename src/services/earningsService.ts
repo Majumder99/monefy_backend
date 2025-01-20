@@ -20,7 +20,7 @@ export class EarningService {
 
   async createEarning(earningData: any) {
     const category = await Category.findByPk(earningData.category_id);
-    if (!category || category.type !== "earning") {
+    if (!category || category.dataValues.type !== "earning") {
       throw new AppError("Invalid earning category", 400);
     }
 
@@ -43,13 +43,13 @@ export class EarningService {
     }
 
     // Only allow update if user owns the earning or is admin
-    if (earning.user_id !== userId && !isAdmin) {
+    if (earning.dataValues.user_id !== userId && !isAdmin) {
       throw new AppError("Not authorized to update this earning", 403);
     }
 
     if (earningData.category_id) {
       const category = await Category.findByPk(earningData.category_id);
-      if (!category || category.type !== "earning") {
+      if (!category || category.dataValues.type !== "earning") {
         throw new AppError("Invalid earning category", 400);
       }
     }
@@ -64,7 +64,7 @@ export class EarningService {
     }
 
     // Only allow deletion if user owns the earning or is admin
-    if (earning.user_id !== userId && !isAdmin) {
+    if (earning.dataValues.user_id !== userId && !isAdmin) {
       throw new AppError("Not authorized to delete this earning", 403);
     }
 

@@ -20,7 +20,7 @@ export class ExpenseService {
 
   async createExpense(expenseData: any) {
     const category = await Category.findByPk(expenseData.category_id);
-    if (!category || category.type !== "expense") {
+    if (!category || category.dataValues.type !== "expense") {
       throw new AppError("Invalid expense category", 400);
     }
 
@@ -43,13 +43,13 @@ export class ExpenseService {
     }
 
     // Only allow update if user owns the expense or is admin
-    if (expense.user_id !== userId && !isAdmin) {
+    if (expense.dataValues.user_id !== userId && !isAdmin) {
       throw new AppError("Not authorized to update this expense", 403);
     }
 
     if (expenseData.category_id) {
       const category = await Category.findByPk(expenseData.category_id);
-      if (!category || category.type !== "expense") {
+      if (!category || category.dataValues.type !== "expense") {
         throw new AppError("Invalid expense category", 400);
       }
     }
@@ -64,7 +64,7 @@ export class ExpenseService {
     }
 
     // Only allow deletion if user owns the expense or is admin
-    if (expense.user_id !== userId && !isAdmin) {
+    if (expense.dataValues.user_id !== userId && !isAdmin) {
       throw new AppError("Not authorized to delete this expense", 403);
     }
 
