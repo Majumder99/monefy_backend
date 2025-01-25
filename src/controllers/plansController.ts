@@ -1,6 +1,6 @@
 // plansController.ts
 import { RequestHandler } from "express";
-import { PlansService } from "../services/plansService";
+import { PlansService } from "../services/plansService.js";
 
 // For extra clarity, define the shapes of req.params and req.body:
 interface CreatePlanBody {

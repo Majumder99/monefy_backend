@@ -9,13 +9,12 @@
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "allowJs": false, // Disallow JavaScript files
+    "allowJs": false,
     "resolveJsonModule": true
   },
-  "include": ["src/**/*.ts"], // Only include .ts files
+  "include": ["src/**/*.ts"],
   "exclude": ["node_modules", "dist"],
   "ts-node": {
-    // Tell ts-node CLI to install the --loader automatically
     "esm": true
   }
 }

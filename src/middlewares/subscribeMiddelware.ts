@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { Plans, User } from "../models"; // Import Plans instead of Subscription
+import { Plans, User } from "../models/index.js"; // Import Plans instead of Subscription
 
 export const checkSubscription = async (
   req: Request,
@@ -32,7 +32,9 @@ export const checkSubscription = async (
     // 4) Check if the subscription has expired
     if (user.dataValues.subscriptionExpiryDate) {
       const currentDate = new Date();
-      const subscriptionExpiryDate = new Date(user.dataValues.subscriptionExpiryDate);
+      const subscriptionExpiryDate = new Date(
+        user.dataValues.subscriptionExpiryDate
+      );
 
       if (subscriptionExpiryDate < currentDate) {
         // Mark the user as unsubscribed

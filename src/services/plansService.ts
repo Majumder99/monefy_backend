@@ -1,5 +1,5 @@
 // plansService.ts
-import { Plans, Subscription } from "../models"; // or wherever your subscription model is
+import { Plans, Subscription } from "../models/index.js"; // or wherever your subscription model is
 
 interface CreatePlanData {
   type: string;
