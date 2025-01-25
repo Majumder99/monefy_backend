@@ -36,5 +36,8 @@ app.use("/api/expenses", expenseRoutes);
 app.use("/api/earnings", earningRoutes);
 app.use("/api/plans", plansRoutes);
 app.use("/api/subscriptions", subscriptionRoutes);
+app.use("/", (req, res) => {
+  res.send("The backend is running perfectly");
+});
 
 export default app;
