@@ -18,13 +18,15 @@ const subscriptionController = new SubscriptionController();
 
 // Middleware
 app.use(cors());
+app.use(morgan("dev"));
+
 app.post(
   "/webhook",
   express.raw({ type: "application/json" }),
   subscriptionController.webhook
 );
+
 app.use(express.json());
-app.use(morgan("dev"));
 
 // view engine setup
 app.set("view engine", "ejs");
