@@ -1,5 +1,6 @@
 // src/config/db.ts
 import dotenv from "dotenv";
+import pg from "pg";
 import { Sequelize } from "sequelize";
 dotenv.config();
 const dbConfig = {
@@ -7,6 +8,7 @@ const dbConfig = {
         url: process.env.POSTGRESQL_URL,
         options: {
             dialect: "postgres",
+            dialectModule: pg,
             logging: false,
             dialectOptions: {
                 ssl: {
@@ -26,6 +28,7 @@ const dbConfig = {
         url: process.env.POSTGRESQL_URL,
         options: {
             dialect: "postgres",
+            dialectModule: pg,
             logging: false,
             dialectOptions: {
                 ssl: {
